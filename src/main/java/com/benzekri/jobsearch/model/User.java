@@ -15,7 +15,7 @@ import java.util.Set;
 
 
 @Data
-@Document(collection = "users")
+@Document(collection = "Users")
 public class User {
     @Id
     private String id;
