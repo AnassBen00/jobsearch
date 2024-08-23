@@ -5,10 +5,13 @@ import com.benzekri.jobsearch.repository.PostRepository;
 import com.benzekri.jobsearch.repository.SearchPostRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -25,18 +28,32 @@ public class JobPostController {
         response.sendRedirect("/swagger-ui/index.html");
     }
 
+    @PreAuthorize("hasRole('JOBSEEKER') or hasRole('EMPLOYER') or hasRole('ADMIN')")
     @GetMapping("/posts")
     public List<Post> getAllPosts() {
         return repository.findAll();
     }
 
+    @GetMapping("/posts/active")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ResponseEntity<List<Post>> getActiveJobs() {
+        List<Post> activeJobs = repository.findByExpirationDateAfter(LocalDateTime.now());
+        return ResponseEntity.ok(activeJobs);
+    }
+
+    @PreAuthorize("hasRole('JOBSEEKER') or hasRole('EMPLOYER') or hasRole('ADMIN')")
     @GetMapping("/posts/{text}")
     public List<Post> searchPosts(@PathVariable String text){
         return searchRepository.findPosts(text);
     }
 
     @PostMapping("/post")
+    @PreAuthorize("hasRole('EMPLOYER')")
     public Post addPost(@RequestBody Post newPost){
+        if (newPost.getExpirationDate() == null){
+            //set expiration date to 30 days if not already set
+            newPost.setExpirationDate(LocalDateTime.now().plusDays(30));
+        }
         return repository.save(newPost);
     }
 }
