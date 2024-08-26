@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface PostRepository extends MongoRepository<Post,String> {
 
-    public List<Post> findByExpirationDateAfter(LocalDateTime now);
+    List<Post> findByCategory(String category);
+    List<Post> findByTagsIn(List<String> tags);
+    List<Post> findByCategoryAndTagsIn(String category, List<String> tags);
+    List<Post> findByExpirationDateAfter(LocalDateTime now);
 
 }

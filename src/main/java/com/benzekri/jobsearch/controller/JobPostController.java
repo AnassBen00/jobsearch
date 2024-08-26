@@ -56,4 +56,25 @@ public class JobPostController {
         }
         return repository.save(newPost);
     }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<Post>> getJobsByCategory(@PathVariable String category) {
+        List<Post> jobs = repository.findByCategory(category);
+        return ResponseEntity.ok(jobs);
+    }
+
+    @GetMapping("/tags")
+    public ResponseEntity<List<Post>> getJobsByTags(@RequestParam List<String> tags) {
+        List<Post> jobs = repository.findByTagsIn(tags);
+        return ResponseEntity.ok(jobs);
+    }
+
+    @GetMapping("/category/{category}/tags")
+    public ResponseEntity<List<Post>> getJobsByCategoryAndTags(
+            @PathVariable String category,
+            @RequestParam List<String> tags) {
+        List<Post> jobs = repository.findByCategoryAndTagsIn(category, tags);
+        return ResponseEntity.ok(jobs);
+    }
+
 }
