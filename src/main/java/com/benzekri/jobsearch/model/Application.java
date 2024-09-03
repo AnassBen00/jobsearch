@@ -19,4 +19,5 @@ public class Application {
     private String coverLetter;
     private String resumePath; // Path to the resume file stored on the server
     private LocalDateTime applicationDate;
+    private String status;
 }

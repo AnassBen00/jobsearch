@@ -5,10 +5,8 @@ import com.benzekri.jobsearch.repository.ApplicationRepository;
 import com.benzekri.jobsearch.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -32,6 +30,17 @@ public class ApplicationController {
             return ResponseEntity.ok(application);
         } catch (IOException e) {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ResponseEntity<Application> updateApplicationStatus(@PathVariable("id") String applicationId, @RequestParam("status") String status) {
+        try {
+            Application updatedApplication = applicationService.updateApplicationStatus(applicationId, status);
+            return ResponseEntity.ok(updatedApplication);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build(); // Return 404 if not found
         }
     }
 }

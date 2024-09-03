@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class ApplicationService {
@@ -53,5 +54,17 @@ public class ApplicationService {
         Files.copy(resume.getInputStream(), filePath);
 
         return fileName;
+    }
+
+    public Application updateApplicationStatus(String applicationId, String status) {
+        Optional<Application> applicationOptional = applicationRepository.findById(applicationId);
+
+        if (applicationOptional.isPresent()) {
+            Application application = applicationOptional.get();
+            application.setStatus(status); // Update the status
+            return applicationRepository.save(application); // Save the updated application
+        } else {
+            throw new RuntimeException("Application not found with id: " + applicationId);
+        }
     }
 }
