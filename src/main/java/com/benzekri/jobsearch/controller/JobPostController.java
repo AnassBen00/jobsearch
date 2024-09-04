@@ -57,23 +57,17 @@ public class JobPostController {
         return repository.save(newPost);
     }
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<Post>> getJobsByCategory(@PathVariable String category) {
-        List<Post> jobs = repository.findByCategory(category);
-        return ResponseEntity.ok(jobs);
-    }
+    // New method for filtering with multiple criteria
+    @PreAuthorize("hasRole('JOBSEEKER') or hasRole('EMPLOYER') or hasRole('ADMIN')")
+    @GetMapping("/posts/filter")
+    public ResponseEntity<List<Post>> searchPostsByFilters(
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "minSalary", required = false) Double minSalary,
+            @RequestParam(value = "maxSalary", required = false) Double maxSalary,
+            @RequestParam(value = "tags", required = false) List<String> tags) {
 
-    @GetMapping("/tags")
-    public ResponseEntity<List<Post>> getJobsByTags(@RequestParam List<String> tags) {
-        List<Post> jobs = repository.findByTagsIn(tags);
-        return ResponseEntity.ok(jobs);
-    }
-
-    @GetMapping("/category/{category}/tags")
-    public ResponseEntity<List<Post>> getJobsByCategoryAndTags(
-            @PathVariable String category,
-            @RequestParam List<String> tags) {
-        List<Post> jobs = repository.findByCategoryAndTagsIn(category, tags);
+        List<Post> jobs = searchRepository.filterPosts(category, location, minSalary, maxSalary, tags);
         return ResponseEntity.ok(jobs);
     }
 

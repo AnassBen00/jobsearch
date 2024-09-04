@@ -20,6 +20,9 @@ public class Post {
     private LocalDateTime expirationDate;
     private String category;
     private List<String> tags;
+    private String location;
+    private Double minSalary;
+    private Double maxSalary;
 
     public Post(String profile, String desc, int exp, String[] techs) {
         this.profile = profile;

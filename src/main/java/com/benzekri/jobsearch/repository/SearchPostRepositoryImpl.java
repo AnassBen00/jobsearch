@@ -40,4 +40,54 @@ public class SearchPostRepositoryImpl implements SearchPostRepository{
 
         return posts;
     }
+
+    // New method for filtering with multiple criteria
+    @Override
+    public List<Post> filterPosts(String category, String location, Double minSalary, Double maxSalary, List<String> tags) {
+        List<Post> posts = new ArrayList<>();
+
+        MongoDatabase database = client.getDatabase("JobSearch");
+        MongoCollection<Document> collection = database.getCollection("JobPost");
+
+        List<Document> pipeline = new ArrayList<>();
+
+        // Match stage for dynamic filters
+        Document match = new Document();
+
+        if (category != null && !category.isEmpty()) {
+            match.append("category", category);
+        }
+
+        if (location != null && !location.isEmpty()) {
+            match.append("location", location);
+        }
+
+        if (minSalary != null && maxSalary != null) {
+            match.append("minSalary", new Document("$gte", minSalary));
+            match.append("maxSalary", new Document("$lte", maxSalary));
+        } else if (minSalary != null) {
+            match.append("minSalary", new Document("$gte", minSalary));
+        } else if (maxSalary != null) {
+            match.append("maxSalary", new Document("$lte", maxSalary));
+        }
+
+        if (tags != null && !tags.isEmpty()) {
+            match.append("tags", new Document("$in", tags));
+        }
+
+        // Add the match stage if any filters are present
+        if (!match.isEmpty()) {
+            pipeline.add(new Document("$match", match));
+        }
+
+        // Sorting stage (optional, add sorting by experience or any other field as needed)
+        pipeline.add(new Document("$sort", new Document("exp", 1L)));
+
+        // Perform aggregation with pipeline
+        AggregateIterable<Document> result = collection.aggregate(pipeline);
+
+        result.forEach(document -> posts.add(converter.read(Post.class, document)));
+
+        return posts;
+    }
 }
