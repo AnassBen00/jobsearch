@@ -23,6 +23,7 @@ public class Post {
     private String location;
     private Double minSalary;
     private Double maxSalary;
+    private String employerId;
 
     public Post(String profile, String desc, int exp, String[] techs) {
         this.profile = profile;
