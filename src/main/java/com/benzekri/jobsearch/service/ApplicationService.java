@@ -1,7 +1,9 @@
 package com.benzekri.jobsearch.service;
 
 import com.benzekri.jobsearch.model.Application;
+import com.benzekri.jobsearch.model.User;
 import com.benzekri.jobsearch.repository.ApplicationRepository;
+import com.benzekri.jobsearch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +22,12 @@ public class ApplicationService {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public Application applyToJob(String jobId, String userId, MultipartFile resume, String coverLetter) throws IOException {
         // Save the resume to the server
@@ -59,12 +67,26 @@ public class ApplicationService {
     public Application updateApplicationStatus(String applicationId, String status) {
         Optional<Application> applicationOptional = applicationRepository.findById(applicationId);
 
-        if (applicationOptional.isPresent()) {
-            Application application = applicationOptional.get();
-            application.setStatus(status); // Update the status
-            return applicationRepository.save(application); // Save the updated application
-        } else {
+        if (!applicationOptional.isPresent()) {
             throw new RuntimeException("Application not found with id: " + applicationId);
         }
+        Application application = applicationOptional.get();
+        application.setStatus(status); // Update the status
+        Application upadatedApplcation = applicationRepository.save(application); // Save the updated application
+
+        // Send email notification to the applicant
+        String subject = "Application Status Update for Job: " + application.getJobId();
+        String body = "Your application status has been updated to: " + status;
+
+        // finding User email
+        Optional<User> user = userRepository.findById(application.getUserId());
+        if (user.isPresent()){
+            emailService.sendEmail(user.get().getEmail(), subject, body);
+
+        }
+        else {
+            throw new RuntimeException("User not found with id: " + applicationId);
+        }
+        return upadatedApplcation;
     }
 }

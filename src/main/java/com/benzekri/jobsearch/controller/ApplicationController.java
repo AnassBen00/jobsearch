@@ -35,7 +35,7 @@ public class ApplicationController {
 
     @PutMapping("/{id}/status")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ResponseEntity<Application> updateApplicationStatus(@PathVariable("id") String applicationId, @RequestParam("status") String status) {
+    public ResponseEntity<Application> updateApplicationStatus(@PathVariable("id") String applicationId, @RequestBody String status) {
         try {
             Application updatedApplication = applicationService.updateApplicationStatus(applicationId, status);
             return ResponseEntity.ok(updatedApplication);
