@@ -22,6 +22,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(JobPostController.class)
@@ -95,6 +96,7 @@ public class JobPostControllerTest {
         when(repository.save(any(Post.class))).thenReturn(newPost);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/post")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"profile\":\"Software Engineer\",\"desc\":\"Job Description\",\"exp\":2,\"techs\":[\"Java\",\"Spring\"]}"))
                 .andExpect(status().isOk())
