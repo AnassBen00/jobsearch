@@ -36,11 +36,6 @@ public class EmployerControllerTest {
     @MockBean
     private PostRepository postRepository;
 
-    @BeforeEach
-    public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new EmployerController())
-                .build();
-    }
 
     @Test
     @WithMockUser(roles = {"EMPLOYER"})
