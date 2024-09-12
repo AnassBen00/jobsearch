@@ -1,7 +1,6 @@
 package com.benzekri.jobsearch.controller;
 
 import com.benzekri.jobsearch.model.Application;
-import com.benzekri.jobsearch.repository.ApplicationRepository;
 import com.benzekri.jobsearch.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ public class ApplicationController {
     private ApplicationService applicationService;
 
     @PostMapping("/apply")
+    @PreAuthorize("hasRole('JOBSEEKER')")
     public ResponseEntity<Application> applyToJob(
             @RequestParam("jobId") String jobId,
             @RequestParam("userId") String userId,
