@@ -1,11 +1,9 @@
-package com.benzekri.jobsearch;
+package com.benzekri.jobsearch.controller;
 
-import com.benzekri.jobsearch.controller.EmployerController;
 import com.benzekri.jobsearch.model.Application;
 import com.benzekri.jobsearch.model.Post;
 import com.benzekri.jobsearch.repository.ApplicationRepository;
 import com.benzekri.jobsearch.repository.PostRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

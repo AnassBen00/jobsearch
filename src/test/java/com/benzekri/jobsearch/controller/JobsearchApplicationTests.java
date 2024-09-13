@@ -1,4 +1,4 @@
-package com.benzekri.jobsearch;
+package com.benzekri.jobsearch.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

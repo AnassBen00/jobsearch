@@ -1,6 +1,5 @@
-package com.benzekri.jobsearch;
+package com.benzekri.jobsearch.controller;
 
-import com.benzekri.jobsearch.controller.JobPostController;
 import com.benzekri.jobsearch.model.Post;
 import com.benzekri.jobsearch.repository.PostRepository;
 import com.benzekri.jobsearch.repository.SearchPostRepository;

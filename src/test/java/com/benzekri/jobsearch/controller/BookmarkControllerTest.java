@@ -1,12 +1,9 @@
-package com.benzekri.jobsearch;
+package com.benzekri.jobsearch.controller;
 
-import com.benzekri.jobsearch.controller.BookmarkController;
 import com.benzekri.jobsearch.model.Bookmark;
 import com.benzekri.jobsearch.service.BookmarkService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

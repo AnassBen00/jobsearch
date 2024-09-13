@@ -1,6 +1,5 @@
-package com.benzekri.jobsearch;
+package com.benzekri.jobsearch.controller;
 
-import com.benzekri.jobsearch.controller.ApplicationController;
 import com.benzekri.jobsearch.model.Application;
 import com.benzekri.jobsearch.service.ApplicationService;
 import org.junit.jupiter.api.BeforeEach;

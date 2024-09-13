@@ -72,21 +72,21 @@ public class ApplicationService {
         }
         Application application = applicationOptional.get();
         application.setStatus(status); // Update the status
-        Application upadatedApplcation = applicationRepository.save(application); // Save the updated application
 
-        // Send email notification to the applicant
-        String subject = "Application Status Update for Job: " + application.getJobId();
-        String body = "Your application status has been updated to: " + status;
 
         // finding User email
         Optional<User> user = userRepository.findById(application.getUserId());
         if (user.isPresent()){
-            emailService.sendEmail(user.get().getEmail(), subject, body);
+            Application upadatedApplcation = applicationRepository.save(application); // Save the updated application
 
+            // Send email notification to the applicant
+            String subject = "Application Status Update for Job: " + application.getJobId();
+            String body = "Your application status has been updated to: " + status;
+            emailService.sendEmail(user.get().getEmail(), subject, body);
+            return upadatedApplcation;
         }
         else {
             throw new RuntimeException("User not found with id: " + applicationId);
         }
-        return upadatedApplcation;
     }
 }
