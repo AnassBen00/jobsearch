@@ -1,4 +1,4 @@
-Job Search Backend Application
+# Job Search Backend Application
 
 This is the backend API for the Job Search application, which handles job listings, applications, user management, and more. The project is built using Spring Boot, MongoDB, and JWT-based authentication.
 Table of Contents
@@ -10,7 +10,7 @@ Table of Contents
     API Documentation
     Running Tests
 
-Technologies
+# Technologies
 
     Java: Version 17 or above
     Spring Boot: 3.x.x
@@ -22,7 +22,7 @@ Technologies
     Maven: For dependency management
     JUnit: For testing
 
-Installation
+# Installation
 Prerequisites
 
     Java 17 or higher
@@ -96,7 +96,7 @@ Default Endpoints
     Swagger UI: /swagger-ui/**
     OpenAPI Documentation: /v3/api-docs/**
 
-API Documentation
+# API Documentation
 
 The application uses Swagger for API documentation. Once the application is running, you can access the Swagger UI at:
 
