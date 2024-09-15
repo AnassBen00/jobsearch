@@ -6,6 +6,7 @@ import com.benzekri.jobsearch.repository.PostRepository;
 import com.benzekri.jobsearch.repository.SearchPostRepository;
 import com.benzekri.jobsearch.repository.UserRepository;
 import com.benzekri.jobsearch.service.EmailService;
+import com.benzekri.jobsearch.service.NotificationService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,9 @@ public class JobPostController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @RequestMapping(value = "/")
     public void redirect(HttpServletResponse response) throws IOException {
@@ -72,8 +76,9 @@ public class JobPostController {
         List<User> jobSeekers = userRepository.findByRolesContaining("JOBSEEKER");
         for (User user : jobSeekers) {
             emailService.sendEmail(user.getEmail(), subject, body);
+            // creating a notification
+            notificationService.createNotification(user.getId(), newPost.getId(), body);
         }
-
         return savedPost;
     }
 

@@ -2,6 +2,7 @@ package com.benzekri.jobsearch.controller;
 
 import com.benzekri.jobsearch.model.Application;
 import com.benzekri.jobsearch.service.ApplicationService;
+import com.benzekri.jobsearch.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,9 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping("/apply")
     @PreAuthorize("hasRole('JOBSEEKER')")
@@ -38,6 +42,9 @@ public class ApplicationController {
     public ResponseEntity<Application> updateApplicationStatus(@PathVariable("id") String applicationId, @RequestBody String status) {
         try {
             Application updatedApplication = applicationService.updateApplicationStatus(applicationId, status);
+            // creating a notification
+            String message = "Your application has been updated to: " + status;
+            notificationService.createNotification(updatedApplication.getUserId(), updatedApplication.getJobId(), message);
             return ResponseEntity.ok(updatedApplication);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build(); // Return 404 if not found

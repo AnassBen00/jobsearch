@@ -28,7 +28,7 @@ public class NotificationService {
 
     // Retrieve all notifications for a user
     public List<Notification> getNotificationsForUser(String userId){
-        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        return notificationRepository.findByUserIdOrderByCreatedTimeDesc(userId);
     }
 
     // Mark notification as read
