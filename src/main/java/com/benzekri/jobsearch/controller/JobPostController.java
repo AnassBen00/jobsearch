@@ -1,8 +1,11 @@
 package com.benzekri.jobsearch.controller;
 
 import com.benzekri.jobsearch.model.Post;
+import com.benzekri.jobsearch.model.User;
 import com.benzekri.jobsearch.repository.PostRepository;
 import com.benzekri.jobsearch.repository.SearchPostRepository;
+import com.benzekri.jobsearch.repository.UserRepository;
+import com.benzekri.jobsearch.service.EmailService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +21,16 @@ import java.util.List;
 @RestController
 public class JobPostController {
     @Autowired
-    PostRepository repository;
+    private PostRepository repository;
 
     @Autowired
-    SearchPostRepository searchRepository;
+    private SearchPostRepository searchRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @RequestMapping(value = "/")
     public void redirect(HttpServletResponse response) throws IOException {
@@ -54,7 +63,18 @@ public class JobPostController {
             //set expiration date to 30 days if not already set
             newPost.setExpirationDate(LocalDateTime.now().plusDays(30));
         }
-        return repository.save(newPost);
+        Post savedPost = repository.save(newPost);
+
+        // Send email notification
+        String subject = "New Job Posting: " + newPost.getProfile();
+        String body = "A new job has been posted: " + newPost.getDesc();
+        // Retrieving jobSeekers and sending email for the new job post
+        List<User> jobSeekers = userRepository.findByRolesContaining("JOBSEEKER");
+        for (User user : jobSeekers) {
+            emailService.sendEmail(user.getEmail(), subject, body);
+        }
+
+        return savedPost;
     }
 
     // New method for filtering with multiple criteria
